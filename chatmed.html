@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CHATMED - Gestão de Serviços de Saúde</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f0f8ff;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    
+    header {
+      background: linear-gradient(135deg, #1a75ff, #0052cc);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    
+    .subtitle {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+    
+    nav {
+      background-color: #004080;
+      padding: 0;
+    }
+    
+    .nav-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .nav-tab {
+      padding: 15px 25px;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      text-align: center;
+    }
+    
+    .nav-tab:hover {
+      background-color: #00264d;
+    }
+    
+    .nav-tab.active {
+      background-color: #00264d;
+      border-bottom: 3px solid #4da6ff;
+    }
+    
+    .tab-content {
+      display: none;
+      padding: 30px;
+    }
+    
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.5s;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    h2 {
+      color: #004080;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e6f0ff;
+    }
+    
+    h3 {
+      color: #00264d;
+      margin: 20px 0 15px;
+    }
+    
+    p {
+      margin-bottom: 15px;
+      text-align: justify;
+    }
+    
+    /* Estilos do Slider */
+    .slider {
+      position: relative;
+      height: 400px;
+      overflow: hidden;
+      border-radius: 10px;
+      margin: 30px 0;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1s ease;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+    
+    .slide.active {
+      opacity: 1;
+    }
+    
+    .slide-content {
+      text-align: center;
+      background-color: rgba(0, 70, 102, 0.8);
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 80%;
+    }
+    
+    .slider-control {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      padding: 15px;
+      cursor: pointer;
+      font-size: 24px;
+      z-index: 10;
+      transition: background-color 0.3s;
+    }
+    
+    .slider-control:hover {
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+    
+    .slider-control.prev {
+      left: 10px;
+    }
+    
+    .slider-control.next {
+      right: 10px;
+    }
+    
+    .services {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+    
+    .service-card {
+      background: linear-gradient(135deg, #e6f0ff 0%, #cce0ff 100%);
+      padding: 25px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease;
+    }
+    
+    .service-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .service-card i {
+      font-size: 2.5rem;
+      color: #004080;
+      margin-bottom: 15px;
+    }
+    
+    .contact-info {
+      margin: 20px 0;
+      padding: 20px;
+      background-color: #e6f0ff;
+      border-radius: 8px;
+    }
+    
+    .contact-info p {
+      margin: 10px 0;
+      display: flex;
+      align-items: center;
+    }
+    
+    .contact-info i {
+      margin-right: 10px;
+      color: #004080;
+    }
+    
+    .health-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+    
+    .stat-card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    
+    .stat-card i {
+      font-size: 2rem;
+      color: #004080;
+      margin-bottom: 15px;
+    }
+    
+    .stat-number {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #004080;
+      margin: 10px 0;
+    }
+    
+    .image-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .gallery-item {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      height: 200px;
+      background-size: cover;
+      background-position: center;
+    }
+    
+    footer {
+      background: linear-gradient(135deg, #004080, #00264d);
+      color: white;
+      text-align: center;
+      padding: 30px 0;
+      margin-top: 50px;
+    }
+    
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
+    .social-links {
+      margin: 20px 0;
+    }
+    
+    .social-links a {
+      color: white;
+      font-size: 1.5rem;
+      margin: 0 15px;
+      transition: transform 0.3s;
+      display: inline-block;
+    }
+    
+    .social-links a:hover {
+      transform: translateY(-5px);
+    }
+    
+    form {
+      display: grid;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    form div {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    label {
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #004080;
+    }
+    
+    input, textarea {
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    
+    button {
+      background: linear-gradient(135deg, #004080, #00264d);
+      color: white;
+      border: none;
+      padding: 15px 25px;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 102, 153, 0.4);
+    }
+    
+    @media (max-width: 768px) {
+      .nav-container {
+        flex-direction: column;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .slider {
+        height: 300px;
+      }
+      
+      .services, .health-stats, .image-gallery {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1><i class="fas fa-hospital"></i> CHATMED</h1>
+      <p class="subtitle">Inovando a gestão de serviços de saúde em Moçambique</p>
+    </header>
+
+    <nav>
+      <div class="nav-container">
+        <div class="nav-tab active" data-tab="inicio">Início</div>
+        <div class="nav-tab" data-tab="sobre">Sobre Nós</div>
+        <div class="nav-tab" data-tab="servicos">Serviços</div>
+        <div class="nav-tab" data-tab="mocambique">Saúde em Moçambique</div>
+        <div class="nav-tab" data-tab="contactos">Contactos</div>
+      </div>
+    </nav>
+
+    <main>
+      <div id="inicio" class="tab-content active">
+        <div class="slider">
+          <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1586773860418-d37222d8fce3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+            <div class="slide-content">
+              <h2>Tecnologia a Serviço da Saúde</h2>
+              <p>Soluções inovadoras para melhorar a gestão hospitalar</p>
+            </div>
+          </div>
+          <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+            <div class="slide-content">
+              <h2>Atendimento Humanizado</h2>
+              <p>Unindo tecnologia e cuidado ao paciente</p>
+            </div>
+          </div>
+          <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+            <div class="slide-content">
+              <h2>Gestão Eficiente</h2>
+              <p>Otimização de processos para melhor atendimento</p>
+            </div>
+          </div>
+          <button class="slider-control prev" onclick="moveSlide(-1)">&#10094;</button>
+          <button class="slider-control next" onclick="moveSlide(1)">&#10095;</button>
+        </div>
+
+        <h2>Bem-vindo à CHATMED</h2>
+        <p>A CHATMED é uma organização moçambicana dedicada ao desenvolvimento de sistemas de apoio à gestão de serviços de saúde. Nosso foco está na otimização de processos como marcação de consultas, triagem de emergência, guias hospitalares e mais.</p>
+        
+        <div class="health-stats">
+          <div class="stat-card">
+            <i class="fas fa-users"></i>
+            <div class="stat-number">+50</div>
+            <p>Profissionais de saúde capacitados</p>
+          </div>
+          <div class="stat-card">
+            <i class="fas fa-hospital"></i>
+            <div class="stat-number">+20</div>
+            <p>Instituições de saúde atendidas</p>
+          </div>
+          <div class="stat-card">
+            <i class="fas fa-calendar-check"></i>
+            <div class="stat-number">+10.000</div>
+            <p>Consultas agendadas mensalmente</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="sobre" class="tab-content">
+        <h2>Sobre a CHATMED</h2>
+        <p>Fundada em 2015, a CHATMED nasceu da necessidade de modernizar e tornar mais eficientes os processos de gestão hospitalar em Moçambique. Desde então, temos trabalhado com os principais hospitais do país, desenvolvendo soluções personalizadas que atendem às necessidades específicas de cada instituição.</p>
+        
+        <h3>Nossa Missão</h3>
+        <p>Transformar a gestão da saúde através da tecnologia, oferecendo soluções inovadoras que melhoram a eficiência, reduzem custos e, principalmente, elevam a qualidade do cuidado ao paciente.</p>
+        
+        <h3>Nossos Valores</h3>
+        <ul>
+          <li>Inovação constante em nossos produtos e serviços</li>
+          <li>Compromisso com a excelência no atendimento</li>
+          <li>Ética e transparência em todas as relações</li>
+          <li>Valorização das pessoas - pacientes e colaboradores</li>
+          <li>Responsabilidade social e ambiental</li>
+        </ul>
+      </div>
+
+      <div id="servicos" class="tab-content">
+        <h2>Nossos Serviços</h2>
+        <p>A CHATMED oferece uma gama completa de soluções para modernizar e eficientizar a gestão hospitalar:</p>
+        
+        <div class="services">
+          <div class="service-card">
+            <i class="fas fa-laptop-medical"></i>
+            <h3>Desenvolvimento de software hospitalar</h3>
+            <p>Sistemas personalizados para as necessidades específicas de sua instituição</p>
+          </div>
+          
+          <div class="service-card">
+            <i class="fas fa-stethoscope"></i>
+            <h3>Plataformas de gestão clínica</h3>
+            <p>Ferramentas completas para administração de unidades de saúde</p>
+          </div>
+          
+          <div class="service-card">
+            <i class="fas fa-newspaper"></i>
+            <h3>Divulgação de conteúdos e notícias da saúde</h3>
+            <p>Portal especializado em informações relevantes para profissionais da saúde</p>
+          </div>
+          
+          <div class="service-card">
+            <i class="fas fa-users-cog"></i>
+            <h3>Integração de ferramentas para funcionários</h3>
+            <p>Sistemas de gestão de recursos humanos para o setor saúde</p>
+          </div>
+          
+          <div class="service-card">
+            <i class="fas fa-calendar-check"></i>
+            <h3>Sistema de agendamento</h3>
+            <p>Ferramenta completa para marcação de consultas e exames</p>
+          </div>
+          
+          <div class="service-card">
+            <i class="fas fa-file-medical"></i>
+            <h3>Prontuário eletrônico</h3>
+            <p>Sistema integrado de registros médicos eletrônicos</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="mocambique" class="tab-content">
+        <h2>Saúde em Moçambique</h2>
+        <p>Moçambique tem feito progressos significativos no setor de saúde, mas ainda enfrenta desafios consideráveis. O país tem trabalhado para melhorar o acesso aos serviços de saúde, especialmente nas áreas rurais.</p>
+        
+        <h3>Principais Desafios</h3>
+        <ul>
+          <li>Acesso limitado a serviços de saúde em áreas remotas</li>
+          <li>Escassez de profissionais de saúde qualificados</li>
+          <li>Doenças endêmicas como malária, HIV/SIDA e tuberculose</li>
+          <li>Recursos financeiros limitados para o setor de saúde</li>
+        </ul>
+        
+        <h3>Progressos Recentes</h3>
+        <ul>
+          <li>Expansão da rede de unidades sanitárias</li>
+          <li>Campanhas de vacinação bem-sucedidas</li>
+          <li>Redução da mortalidade infantil e materna</li>
+          <li>Fortalecimento do programa de luta contra o HIV/SIDA</li>
+        </ul>
+        
+        <h3>Dados Estatísticos</h3>
+        <div class="health-stats">
+          <div class="stat-card">
+            <i class="fas fa-baby"></i>
+            <div class="stat-number">64%</div>
+            <p>Partos assistidos por profissionais de saúde</p>
+          </div>
+          <div class="stat-card">
+            <i class="fas fa-syringe"></i>
+            <div class="stat-number">85%</div>
+            <p>Crianças vacinadas contra sarampo</p>
+          </div>
+          <div class="stat-card">
+            <i class="fas fa-clinic-medical"></i>
+            <div class="stat-number">70%</div>
+            <p>População com acesso a serviços de saúde</p>
+          </div>
+        </div>
+        
+        <h3>Imagens do Sistema de Saúde em Moçambique</h3>
+        <div class="image-gallery">
+          <div class="gallery-item" style="background-image: url('https://cdn.who.int/media/images/default-source/mozambique/health-workers-mozambique.jpg?sfvrsn=7a8c0a5c_4');"></div>
+          <div class="gallery-item" style="background-image: url('https://cdn.who.int/media/images/default-source/countries/mozambique/mozambique-health-facility.jpg?sfvrsn=7f3a5b5c_4');"></div>
+          <div class="gallery-item" style="background-image: url('https://www.unicef.org/mozambique/sites/unicef.org.mozambique/files/styles/hero_extended/public/MZ_Valoi_001%20%281%29.jpg?itok=9WnQkD4C');"></div>
+          <div class="gallery-item" style="background-image: url('https://www.afro.who.int/sites/default/files/2020-01/Mozambique_0.jpg');"></div>
+        </div>
+      </div>
+
+      <div id="contactos" class="tab-content">
+        <h2>Contactos</h2>
+        <p>Estamos à disposição para esclarecer dúvidas, receber sugestões ou apresentar nossas soluções.</p>
+        
+        <div class="contact-info">
+          <h3>Informações de Contacto</h3>
+          <p><i class="fas fa-map-marker-alt"></i> Av. 24 de Julho, 123 - Maputo, Moçambique</p>
+          <p><i class="fas fa-phone"></i> +258 865 411 995</p>
+          <p><i class="fas fa-envelope"></i> chatmed@gmail.com</p>
+          <p><i class="fas fa-clock"></i> Segunda a Sexta: 8h00 às 17h00</p>
+        </div>
+        
+        <h3>Envie-nos uma mensagem</h3>
+        <form>
+          <div>
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" required>
+          </div>
+          <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+          <div>
+            <label for="assunto">Assunto:</label>
+            <input type="text" id="assunto" name="assunto" required>
+          </div>
+          <div>
+            <label for="mensagem">Mensagem:</label>
+            <textarea id="mensagem" name="mensagem" rows="5" required></textarea>
+          </div>
+          <button type="submit">Enviar Mensagem</button>
+        </form>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-content">
+        <h3>CHATMED</h3>
+        <p>Inovando a gestão de serviços de saúde em Moçambique</p>
+        
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-linkedin"></i></a>
+        </div>
+        
+        <p>&copy; 2023 CHATMED. Todos os direitos reservados.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Script para o sistema de abas
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        tab.classList.add('active');
+        const tabId = tab.getAttribute('data-tab');
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
+
+    // Script para o slider de imagens
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    
+    function showSlide(n) {
+      slides.forEach(slide => slide.classList.remove('active'));
+      currentSlide = (n + slides.length) % slides.length;
+      slides[currentSlide].classList.add('active');
+    }
+    
+    function moveSlide(n) {
+      showSlide(currentSlide + n);
+    }
+    
+    // Auto-avanço do slider
+    setInterval(() => {
+      moveSlide(1);
+    }, 5000);
+  </script>
+
+</body>
+</html>
